@@ -15,6 +15,7 @@ namespace VendingMachine.UI
         private static ICoinsRepository _coinsRepository;
 
         private static bool _cancel;
+        private static bool _sold;
 
         static void Main(string[] args)
         {
@@ -26,30 +27,24 @@ namespace VendingMachine.UI
 
             _machine = new Machine(new ProductsRepository(), new CoinsAmountRepository(_coinsRepository), _coinsRepository);
 
-            Show();
-
+            Menu();
         }
 
-        static void Show()
+        static void Menu()
         {
             PrintHeader();
 
-            var productKeys = _machine.Products.Select(x => x.Key);
-            var coinNames = _machine.Coins.Select(c => c.Code);
-
-            var coinOptions = String.Join("|", coinNames);
-
             while (true)
             {
-                DisplayRemainProducts();
+                DisplayStockProducts();
 
-                bool sold = false;
+                _sold = false;
                 _cancel = false;
 
-                while (!sold && !_cancel)
+                while (!_sold && !_cancel)
                 {
-                    Console.WriteLine($"Deposited money = {_machine.Wallet.TotalValue.ToString("0.00")}");
-                    Console.WriteLine($"Enter Coin {coinOptions} Or Select Product [Key] Or Cancel [Q]");
+                    ShowOptions();
+
                     string? input = Console.ReadLine();
                     if (input == null)
                     {
@@ -64,74 +59,20 @@ namespace VendingMachine.UI
                         continue;
                     }
 
-                    if (coinNames.Contains(lowInput))
+                    if (_machine.Coins.Select(c => c.Code).Contains(lowInput))
                     {
-                        var coin = _machine.Coins.First(c => c.Code == input);
-
-                        var enterCoinCommandHandler = new EnterCoinCommandHandler(_machine);
-                        enterCoinCommandHandler.Handle(new CoinAmount(coin, 1));
-
+                        EnterCoinInput(lowInput);
                         continue;
                     }
 
-                    if (productKeys.Contains(lowInput))
+                    if (_machine.Products.Select(x => x.Key).Contains(lowInput))
                     {
-                        var product = _machine.Products.First(c => c.Key == input);
-
-                        var moneyDifference = _machine.Wallet.TotalValue - product.Price;
-
-                        if (moneyDifference >= 0)
-                        {
-                            var selectProductCommandHandler = new SelectProductCommandHandler(_machine);
-
-                            var returnCoinAmount = selectProductCommandHandler.Handle(product);
-                            if(returnCoinAmount == null)
-                            {
-                                //the change have not solution.Cancel operation:
-                                Console.WriteLine($"Sorry, I have not money to change.");
-
-                                Cancel();
-                                continue;
-                            }
-
-                            Console.WriteLine($"Take your product: {product.Code}");
-
-                            sold = true;
-
-                            if (returnCoinAmount.Any())
-                            {
-                                var coinsToReturn = returnCoinAmount.Select(rc => rc.ToString());
-
-                                var toReturn = String.Join(" | ", coinsToReturn);
-
-                                Console.WriteLine($"Take your change: {toReturn}");
-                            }
-
-                            ClearConsole();
-                        }
-                        else
-                        {
-                            var debMoney = Math.Abs(moneyDifference).ToString("0.00");
-                            Console.WriteLine($"Not enough money. Enter {debMoney} euros more.");
-                            continue;
-                        }
+                        SelectProductInput(lowInput);
                     }
                 }
             }
 
-            static void ClearConsole()
-            {
-                Console.WriteLine("Enter when ready");
-                Console.ReadLine();
-                Console.Clear();
-            }
-
-            static void PrintHeader()
-            {
-                Console.WriteLine("Vending machine...");
-            }
-
-            static void DisplayRemainProducts()
+            static void DisplayStockProducts()
             {
                 Console.WriteLine($"\n{"Key"} \t {"Product".PadRight(18)} {"Price".PadLeft(7)} \t {"Stock".PadRight(4)}");
                 Console.WriteLine("----------------------------------------------");
@@ -148,7 +89,66 @@ namespace VendingMachine.UI
                 }
 
                 Console.WriteLine();
+            }
 
+            static void EnterCoinInput(string input)
+            {
+                var coin = _machine.Coins.First(c => c.Code == input);
+
+                var enterCoinCommandHandler = new EnterCoinCommandHandler(_machine);
+
+                enterCoinCommandHandler.Handle(new CoinAmount(coin, 1));
+            }
+
+            static void SelectProductInput(string lowInput)
+            {
+                if (_machine.Products.Select(x => x.Key).Contains(lowInput))
+                {
+                    var product = _machine.Products.First(c => c.Key == lowInput);
+
+                    var moneyDifference = _machine.Wallet.TotalValue - product.Price;
+
+                    if (moneyDifference >= 0)
+                    {
+                        Select(product);
+                    }
+                    else
+                    {
+                        var debMoney = Math.Abs(moneyDifference).ToString("0.00");
+                        Console.WriteLine($"Not enough money. Enter {debMoney} euros more.");
+                    }
+                }
+            }
+
+            static bool Select(Product product)
+            {
+                var selectProductCommandHandler = new SelectProductCommandHandler(_machine);
+                var returnCoinAmount = selectProductCommandHandler.Handle(product);
+                if (returnCoinAmount == null)
+                {
+                    //the change have not solution.Cancel operation:
+                    Console.WriteLine($"Sorry, I have not money to change.");
+
+                    Cancel();
+                    return false;
+                }
+
+                Console.WriteLine($"Take your product: {product.Code}");
+
+                if (returnCoinAmount.Any())
+                {
+                    var coinsToReturn = returnCoinAmount.Select(rc => rc.ToString());
+
+                    var toReturn = String.Join(" | ", coinsToReturn);
+
+                    Console.WriteLine($"Take your change: {toReturn}");
+                }
+
+                ClearConsole();
+
+                _sold = true;
+
+                return true;
             }
 
             static void Cancel()
@@ -168,6 +168,25 @@ namespace VendingMachine.UI
                 _cancel = true;
 
                 ClearConsole();
+            }
+
+            static void ClearConsole()
+            {
+                Console.WriteLine("Enter when ready");
+                Console.ReadLine();
+                Console.Clear();
+            }
+
+            static void ShowOptions()
+            {
+                var coinOptions = String.Join("|", _machine.Coins.Select(c => c.Code));
+                Console.WriteLine($"Deposited money = {_machine.Wallet.TotalValue.ToString("0.00")}");
+                Console.WriteLine($"Enter Coin {coinOptions} Or Select Product [Key] Or Cancel [Q]");
+            }
+
+            static void PrintHeader()
+            {
+                Console.WriteLine("Vending machine...");
             }
         }
     }
