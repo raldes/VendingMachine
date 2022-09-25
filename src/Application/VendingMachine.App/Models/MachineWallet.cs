@@ -58,8 +58,7 @@ namespace VendingMachine.App.Models
                 var selectedCoin = sortedCoins.Where(ca => ca.Amount > 0).FirstOrDefault(c => c.Coin.Value <= rest);
                 if(selectedCoin == null)
                 {
-                    //have not money to return
-                    //todo: algoritmo al reves: dar vuelto mayor. Seleccionar en ciclo las monedas (ordenadas de menor a mayor) que se sumen a newrest hasta que el vuelto se mayor o igual que rest
+                    //todo: have not money to return. Add to Return the minimal value until the rest is satified.
                     return null;
                 }
                  

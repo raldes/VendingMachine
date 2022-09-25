@@ -60,19 +60,23 @@ namespace VendingMachine.App.Models
         {
             var valueToReturn = _wallet.GetExtraDepositedValue(product.Price);
 
-            product.RemovePortions(1);
+            var coinAmountsToReturn = _wallet.GetChangeCoinAmmount(valueToReturn);
+            if (coinAmountsToReturn == null)
+            {
+                //the change have not solution. Cancel operation:
+                return null;
+            }
 
-            //move the coins from deposited wallet to change value and empty deposited:
             _wallet.MoveDepositedCoinsToChangeCoins();
 
-            var coinAmountsToReturn =_wallet.GetChangeCoinAmmount(valueToReturn);
+            product.RemovePortions(1);
 
             return coinAmountsToReturn;
         }
         
         public ICollection<CoinAmount> CancelOperation()
         {
-            var coinAmountsToReturn =_wallet.DepositedCoinsAmount;
+            var coinAmountsToReturn = new List<CoinAmount>(_wallet.DepositedCoinsAmount);
 
             _wallet.Clean();
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Channels;
 using VendingMachine.App.CommandHandlers;
 using VendingMachine.App.Contracts;
 using VendingMachine.App.Models;
@@ -12,6 +13,8 @@ namespace VendingMachine.UI
 
         private static IMachine _machine;
         private static ICoinsRepository _coinsRepository;
+
+        private static bool _cancel;
 
         static void Main(string[] args)
         {
@@ -41,9 +44,9 @@ namespace VendingMachine.UI
                 DisplayRemainProducts();
 
                 bool sold = false;
-                bool cancel = false;
+                _cancel = false;
 
-                while (!sold && !cancel)
+                while (!sold && !_cancel)
                 {
                     Console.WriteLine($"Deposited money = {_machine.Wallet.TotalValue.ToString("0.00")}");
                     Console.WriteLine($"Enter Coin {coinOptions} Or Select Product [Key] Or Cancel [Q]");
@@ -57,23 +60,7 @@ namespace VendingMachine.UI
 
                     if (lowInput == "q")
                     {
-                        var cancelCommandHandler = new CancelCommandHandler(_machine);
-
-                        var coinsToReturn = cancelCommandHandler.Handle();
-
-                        Console.WriteLine($"Cancelled");
-
-                        if (coinsToReturn.Any())
-                        {
-                            var toReturn = String.Join(" | ", coinsToReturn);
-
-                            Console.WriteLine($"Please take your money: {toReturn}");
-                        }
-
-                        ClearConsole();
-
-                        cancel = true;
-
+                        Cancel();
                         continue;
                     }
 
@@ -83,8 +70,6 @@ namespace VendingMachine.UI
 
                         var enterCoinCommandHandler = new EnterCoinCommandHandler(_machine);
                         enterCoinCommandHandler.Handle(new CoinAmount(coin, 1));
-
-                        //Console.WriteLine($"Coin entered: {coin.Code}, Balance: {_machine.Wallet.TotalValue} ");
 
                         continue;
                     }
@@ -100,6 +85,14 @@ namespace VendingMachine.UI
                             var selectProductCommandHandler = new SelectProductCommandHandler(_machine);
 
                             var returnCoinAmount = selectProductCommandHandler.Handle(product);
+                            if(returnCoinAmount == null)
+                            {
+                                //the change have not solution.Cancel operation:
+                                Console.WriteLine($"Sorry, I have not money to change.");
+
+                                Cancel();
+                                continue;
+                            }
 
                             Console.WriteLine($"Take your product: {product.Code}");
 
@@ -156,6 +149,25 @@ namespace VendingMachine.UI
 
                 Console.WriteLine();
 
+            }
+
+            static void Cancel()
+            {
+                var cancelCommandHandler = new CancelCommandHandler(_machine);
+                var coinsToReturn = cancelCommandHandler.Handle();
+
+                Console.WriteLine($"Cancelled");
+
+                if (coinsToReturn.Any())
+                {
+                    var toReturn = String.Join(" | ", coinsToReturn);
+
+                    Console.WriteLine($"Please take your money: {toReturn}");
+                }
+
+                _cancel = true;
+
+                ClearConsole();
             }
         }
     }

@@ -27,7 +27,7 @@ namespace VendingMachine.Data
             var espresso = new Product(key: key++, code: "Espresso", price: 1.8M, portions: 20);
             _products.Add(espresso);
 
-            var juice = new Product(key: key++, code: "Juice", price: 1.8M, portions: 20);
+            var juice = new Product(key: key++, code: "Juice", price: 1.83M, portions: 20);
             _products.Add(juice);
 
             var chicken_soup = new Product(key: key++, code: "Chicken soup", price: 0.1M, portions: 15);
