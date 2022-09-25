@@ -181,7 +181,7 @@ namespace VendingMachine.UI
             {
                 var coinOptions = String.Join("|", _machine.Coins.Select(c => c.Code));
                 Console.WriteLine($"Deposited money = {_machine.Wallet.TotalValue.ToString("0.00")}");
-                Console.WriteLine($"Enter Coin {coinOptions} Or Select Product [Key] Or Cancel [Q]");
+                Console.WriteLine($"Enter one coin: [{coinOptions}] Or Select one product [Key] Or Cancel [Q]");
             }
 
             static void PrintHeader()
