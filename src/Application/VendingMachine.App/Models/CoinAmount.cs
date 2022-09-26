@@ -14,7 +14,7 @@ namespace VendingMachine.App.Models
 
         public override string ToString()
         {
-            return $"Coin: {Coin.Code} Amount: {Amount}";
+            return $"{Amount} coins of {Coin.Code}";
         }
     }
 }

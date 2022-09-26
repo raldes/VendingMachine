@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MediatR;
+using VendingMachine.App.Dtos;
 
 namespace VendingMachine.App.Commands
 {
-    internal class CancelCommand
+    public class CancelCommand : IRequest<DevolutionResponse>
     {
+        public bool Cancel { get; set; }
     }
 }

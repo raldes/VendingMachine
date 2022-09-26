@@ -8,11 +8,11 @@ using VendingMachine.App.Models;
 
 namespace VendingMachine.Data
 {
-    public class ProductsRepository : IProductsRepository
+    public class ProductsGetRepository : IProductsGetRepository
     {
         private readonly ICollection<Product> _products = new List<Product>();
 
-        public ProductsRepository()
+        public ProductsGetRepository()
         {
             LoadProducts();
         }

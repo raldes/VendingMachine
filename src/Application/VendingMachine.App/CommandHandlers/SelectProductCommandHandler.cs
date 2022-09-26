@@ -1,9 +1,11 @@
-﻿using VendingMachine.App.Contracts;
-using VendingMachine.App.Models;
+﻿using MediatR;
+using VendingMachine.App.Commands;
+using VendingMachine.App.Contracts;
+using VendingMachine.App.Dtos;
 
 namespace VendingMachine.App.CommandHandlers
 {
-    public class SelectProductCommandHandler
+    public class SelectProductCommandHandler : IRequestHandler<SelectProductCommand, DevolutionResponse>
     {
         private readonly IMachine _machine;
 
@@ -12,9 +14,16 @@ namespace VendingMachine.App.CommandHandlers
             _machine = machine;
         }
 
-        public ICollection<CoinAmount> Handle(Product product)
+        public Task<DevolutionResponse> Handle(SelectProductCommand request, CancellationToken cancellationToken)
         {
-            return _machine.SellProduct(product);
+            var devolution = _machine.SellProduct(request.Product);
+
+            var response = new DevolutionResponse
+            {
+                Devolution = devolution,
+            };
+
+            return Task.FromResult(response);
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿
 namespace VendingMachine.App.Models
 {
-    public class MachineWallet
+    public class Wallet
     {
         private ICollection<CoinAmount> _depositedCoinsAmount = new List<CoinAmount>();
         public ICollection<CoinAmount> DepositedCoinsAmount
@@ -17,7 +17,7 @@ namespace VendingMachine.App.Models
             set { _changeCoinsAmount = value; }
         }
 
-        public decimal TotalValue
+        public decimal Balance
         {
             get { return _depositedCoinsAmount.Sum(c => c.Amount * c.Coin.Value); }
         }
@@ -42,7 +42,7 @@ namespace VendingMachine.App.Models
 
         public decimal GetExtraDepositedValue(decimal price)
         {
-            return TotalValue - price;
+            return Balance - price;
         }
 
         public ICollection<CoinAmount> GetChangeCoinAmmount(decimal value)
@@ -70,7 +70,7 @@ namespace VendingMachine.App.Models
             return returnCoins;
         }
 
-        public void Clean()
+        public void ClearDeposited()
         {
             _depositedCoinsAmount.Clear();
         }

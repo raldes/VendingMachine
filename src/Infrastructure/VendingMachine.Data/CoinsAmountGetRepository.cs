@@ -3,13 +3,12 @@ using VendingMachine.App.Models;
 
 namespace VendingMachine.Data
 {
-    public class CoinsAmountRepository : ICoinsAmountRepository
+    public class CoinsAmountGetRepository : ICoinsAmountGetRepository
     {
         private readonly ICollection<CoinAmount> _coinsAmount = new List<CoinAmount>();
-        private readonly ICoinsRepository _coinsRepository;
+        private readonly ICoinsGetRepository _coinsRepository;
 
-
-        public CoinsAmountRepository(ICoinsRepository coinsRepository)
+        public CoinsAmountGetRepository(ICoinsGetRepository coinsRepository)
         {
             _coinsRepository = coinsRepository;
             LoadCoinsAmount();
