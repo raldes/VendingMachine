@@ -18,7 +18,7 @@ namespace VendingMachine.UnitTest
         {
             var product = new Product(99, "Water", 1.20M, 1);
 
-            _productsRepositoryMock.Setup(p => p.Products());
+            _productsRepositoryMock.Setup(p => p.LoadProducts());
             _walletMock.Setup(x => x.AddCoinAmount(new CoinAmount(new Coin("20c", 0.20M), 6)));
             _walletMock.Setup(x => x.GetExtraDepositedValue(product.Price)).Returns(0);
 
@@ -29,11 +29,10 @@ namespace VendingMachine.UnitTest
                 );
 
             // Act
-            var devolution = machine.SellProduct(product);
+            machine.SellProduct(product);
 
             // Assert
             Assert.True(machine.Products.FirstOrDefault(p => p.Code == "Water") != null);
-            Assert.(devolution);
         }
 
         //[Fact]
