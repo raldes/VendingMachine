@@ -1,5 +1,4 @@
-﻿using VendingMachine.App.Commands;
-using VendingMachine.App.Contracts;
+﻿using VendingMachine.App.Contracts;
 
 namespace VendingMachine.App.Models
 {
