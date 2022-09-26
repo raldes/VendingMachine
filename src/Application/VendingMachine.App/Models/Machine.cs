@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using VendingMachine.App.Commands;
 using VendingMachine.App.Contracts;
 
 namespace VendingMachine.App.Models
@@ -16,40 +11,32 @@ namespace VendingMachine.App.Models
             get { return _products; }
         }
 
-        private MachineState _state;
-        public MachineState State
-        {
-            get { return _state; }
-        }
-
-        private MachineWallet _wallet = new MachineWallet();
-        public MachineWallet Wallet
+        private Wallet _wallet = new Wallet();
+        public Wallet Wallet
         {
             get { return _wallet; }
         }
 
-        private readonly IProductsRepository _productsRepository;
-        private readonly ICoinsRepository _coinsRepository;
-        private readonly ICoinsAmountRepository _coinsAmountRepository;
+        private readonly IProductsGetRepository _productsRepository;
+        private readonly ICoinsGetRepository _coinsRepository;
+        private readonly ICoinsAmountGetRepository _coinsAmountRepository;
 
-        public Machine(IProductsRepository productsRepository,
-            ICoinsAmountRepository coinsAmountRepository,
-            ICoinsRepository coinsRepository)
+        public Machine(IProductsGetRepository productsRepository,
+            ICoinsAmountGetRepository coinsAmountRepository,
+            ICoinsGetRepository coinsRepository)
         {
             _productsRepository = productsRepository;
             _coinsAmountRepository = coinsAmountRepository;
             _coinsRepository = coinsRepository;
 
-            MachineStarted();
+            Start();
         }
 
-        public void MachineStarted()
+        private void Start()
         {
-            _state = MachineState.MachineStarted;
-
             _products = _productsRepository.Get();
 
-            _wallet.Clean();
+            _wallet.ClearDeposited();
 
             _wallet.ChangeCoinsAmount = _coinsAmountRepository.Get().ToList();
         }
@@ -63,7 +50,7 @@ namespace VendingMachine.App.Models
             var coinAmountsToReturn = _wallet.GetChangeCoinAmmount(valueToReturn);
             if (coinAmountsToReturn == null)
             {
-                //the change have not solution. Cancel operation:
+                //the change have not solution (there are not coins to give the change). Cancel operation:
                 return null;
             }
 
@@ -78,40 +65,9 @@ namespace VendingMachine.App.Models
         {
             var coinAmountsToReturn = new List<CoinAmount>(_wallet.DepositedCoinsAmount);
 
-            _wallet.Clean();
+            _wallet.ClearDeposited();
 
             return coinAmountsToReturn;
         }
-
-        public void SetProductsLoadedState()
-        {
-            _state = MachineState.ProductsLoaded;
-        }
-
-        public void SetInsuficientMoneyLoadedState()
-        {
-            _state = MachineState.InsuficientMoneyLoaded;
-        }
-
-        public void SetSuficientMoneyLoadedState()
-        {
-            _state = MachineState.SuficientMoneyLoaded;
-        }
-
-        public void SetProductSelectedState()
-        {
-            _state = MachineState.ProductSelected;
-        }
-
-        public void SetMoneyChangeRequeridState()
-        {
-            _state = MachineState.MoneyChangeRequerid;
-        }
-
-        public void SetCancelledState()
-        {
-            _state = MachineState.Cancelled;
-        }
-
     }
 }

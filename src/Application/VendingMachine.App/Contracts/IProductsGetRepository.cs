@@ -2,7 +2,7 @@
 
 namespace VendingMachine.App.Contracts
 {
-    public interface IProductsRepository
+    public interface IProductsGetRepository
     {
         ICollection<Product> Get();
     }

@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using VendingMachine.App.Models;
 
-namespace VendingMachine.UI
+namespace VendingMachine.App.Dtos
 {
-    public class Display
+    public class CommandResponse
     {
+        public bool Result { get; set; }
     }
 }

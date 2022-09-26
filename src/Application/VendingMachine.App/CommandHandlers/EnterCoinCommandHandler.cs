@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MediatR;
+using VendingMachine.App.Commands;
 using VendingMachine.App.Contracts;
-using VendingMachine.App.Models;
+using VendingMachine.App.Dtos;
 
 namespace VendingMachine.App.CommandHandlers
 {
-    public class EnterCoinCommandHandler
+    public class EnterCoinCommandHandler : IRequestHandler<EnterCoinCommand, CommandResponse>
     {
         private readonly IMachine _machine;
 
@@ -17,10 +14,10 @@ namespace VendingMachine.App.CommandHandlers
             _machine = machine;
         }
 
-        public void Handle(CoinAmount coinAmount)
+        Task<CommandResponse> IRequestHandler<EnterCoinCommand, CommandResponse>.Handle(EnterCoinCommand request, CancellationToken cancellationToken)
         {
-            //actualizar wallet
-            _machine.Wallet.AddCoinAmount(coinAmount);
+            _machine.Wallet.AddCoinAmount(request.CoinAmount);
+            return Task.FromResult(new CommandResponse { Result = true });
         }
     }
 }
