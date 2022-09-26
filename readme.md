@@ -47,3 +47,9 @@ The solution is a .Net 6 console application.
     - ProductsGetRepository. 
     - CoinsGetRepository.
     - CoinsAmountGetRepository.
+
+### Deployment
+
+The application has a Publish for deployment in a folder and tests its functionality.
+
+2022.09.26
