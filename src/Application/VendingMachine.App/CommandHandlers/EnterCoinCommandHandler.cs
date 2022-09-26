@@ -16,7 +16,7 @@ namespace VendingMachine.App.CommandHandlers
 
         Task<EnterCoinCommandResponse> IRequestHandler<EnterCoinCommand, EnterCoinCommandResponse>.Handle(EnterCoinCommand request, CancellationToken cancellationToken)
         {
-            _machine.Wallet.AddCoinAmount(request.CoinAmount);
+            _machine.AddCoinAmount(request.CoinAmount);
             return Task.FromResult(new EnterCoinCommandResponse(true));
         }
     }

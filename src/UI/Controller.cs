@@ -136,7 +136,7 @@ namespace VendingMachine.UI
             {
                 var product = _machine.Products.First(c => c.Key == lowInput);
 
-                var moneyDifference = _machine.Wallet.Balance - product.Price;
+                var moneyDifference = _machine.GetBalance() - product.Price;
 
                 if (moneyDifference >= 0)
                 {
@@ -214,7 +214,7 @@ namespace VendingMachine.UI
         private void ShowOptions()
         {
             var coinOptions = String.Join("|", _machine.Coins.Select(c => c.Code));
-            Console.WriteLine($"Deposited money = {_machine.Wallet.Balance.ToString("0.00")}");
+            Console.WriteLine($"Deposited money = {_machine.GetBalance().ToString("0.00")}");
             Console.WriteLine($"Enter one coin: [{coinOptions}] Or Select one product [Key] Or Cancel [Q]");
         }
     }
