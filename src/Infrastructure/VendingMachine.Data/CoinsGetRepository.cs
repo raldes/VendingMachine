@@ -22,7 +22,7 @@ namespace VendingMachine.Data
             return _coins.SingleOrDefault(c => c.Code == code);
         }
       
-        private void LoadCoins()
+        public void LoadCoins()
         {
             var ten = new Coin(code: "10c", value: 0.1M);
             _coins.Add(ten);

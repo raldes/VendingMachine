@@ -36,7 +36,7 @@ The solution is a .Net 6 console application.
     - CancelCommandHandler.
 
 - Contracts:
-    - Interface IMachine
+    - Interfaces IMachine and IWallet
     - Interfaces for Get Repositories (IProductsGetRepository, ICoinsGetRepository, ICoinsAmountGetRepository)
 
 - Dtos with response records.

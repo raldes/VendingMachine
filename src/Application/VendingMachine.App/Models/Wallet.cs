@@ -5,6 +5,32 @@ namespace VendingMachine.App.Models
 {
     public class Wallet : IWallet
     {
+        private readonly ICoinsAmountGetRepository _coinsAmountRepository;
+        private readonly ICoinsGetRepository _coinsRepository;
+
+        public Wallet(ICoinsAmountGetRepository coinsAmountRepository, ICoinsGetRepository coinsRepository)
+        {
+            _coinsAmountRepository = coinsAmountRepository;
+            _coinsRepository = coinsRepository; 
+
+            Start();
+        }
+
+        private void Start()
+        {
+            ClearDeposited();
+
+            _changeCoinsAmount = _coinsAmountRepository.Get().ToList();
+            _coins = _coinsRepository.Get().ToList();
+        }
+
+        private ICollection<Coin> _coins;
+        public ICollection<Coin> Coins
+        {
+            get { return _coins; }
+            set { _coins = value; }
+        }
+
         private ICollection<CoinAmount> _depositedCoinsAmount = new List<CoinAmount>();
         public ICollection<CoinAmount> DepositedCoinsAmount
         {
@@ -75,6 +101,11 @@ namespace VendingMachine.App.Models
         public void ClearDeposited()
         {
             _depositedCoinsAmount.Clear();
+        }
+        
+        public void LoadCoinAmounts()
+        {
+            _changeCoinsAmount = _coinsAmountRepository.Get().ToList();
         }
 
         public void AddCoinAmount(CoinAmount coinAmount)

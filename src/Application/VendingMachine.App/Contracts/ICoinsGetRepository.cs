@@ -6,5 +6,6 @@ namespace VendingMachine.App.Contracts
     {
         ICollection<Coin> Get();
         Coin GetByCode(string name);
+        void LoadCoins();
     }
 }

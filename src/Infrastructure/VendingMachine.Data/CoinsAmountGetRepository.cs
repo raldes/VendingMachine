@@ -19,7 +19,7 @@ namespace VendingMachine.Data
             return _coinsAmount;
         }
 
-        private void LoadCoinsAmount()
+        public void LoadCoinsAmount()
         {
             var tens = new CoinAmount(_coinsRepository.GetByCode("10c"), amount: 100);
             _coinsAmount.Add(tens);
