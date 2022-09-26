@@ -61,6 +61,7 @@ namespace VendingMachine.UI
                 services.AddSingleton<IRequestHandler<SelectProductCommand, DevolutionResponse>, SelectProductCommandHandler>();
                 services.AddMediatR(Assembly.GetExecutingAssembly());
                 services.AddSingleton<IMachine, Machine>();
+                services.AddSingleton<IWallet, Wallet>();
                 services.AddSingleton<ICoinsGetRepository, CoinsGetRepository>();
                 services.AddSingleton<ICoinsAmountGetRepository, CoinsAmountGetRepository>();
                 services.AddSingleton<IProductsGetRepository, ProductsGetRepository>();

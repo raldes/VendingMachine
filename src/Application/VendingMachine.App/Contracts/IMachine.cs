@@ -5,9 +5,10 @@ namespace VendingMachine.App.Contracts
     public interface IMachine
     {
         ICollection<Product> Products { get; }
-        Wallet Wallet { get; }
         ICollection<Coin> Coins { get; }
         ICollection<CoinAmount> SellProduct(Product product);
         ICollection<CoinAmount> CancelOperation();
+        void AddCoinAmount(CoinAmount coinAmount);
+        decimal GetBalance();
     }
 }

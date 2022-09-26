@@ -5,31 +5,28 @@ namespace VendingMachine.App.Models
 {
     public class Machine : IMachine
     {
-        private ICollection<Product> _products = new List<Product>();
-        public ICollection<Product> Products
-        {
-            get { return _products; }
-        }
-
-        private Wallet _wallet = new Wallet();
-        public Wallet Wallet
-        {
-            get { return _wallet; }
-        }
-
         private readonly IProductsGetRepository _productsRepository;
         private readonly ICoinsGetRepository _coinsRepository;
         private readonly ICoinsAmountGetRepository _coinsAmountRepository;
+        private readonly IWallet _wallet;
 
         public Machine(IProductsGetRepository productsRepository,
             ICoinsAmountGetRepository coinsAmountRepository,
-            ICoinsGetRepository coinsRepository)
+            ICoinsGetRepository coinsRepository,
+            IWallet wallet)
         {
             _productsRepository = productsRepository;
             _coinsAmountRepository = coinsAmountRepository;
             _coinsRepository = coinsRepository;
+            _wallet = wallet;
 
             Start();
+        }
+
+        private ICollection<Product> _products = new List<Product>();
+        public ICollection<Product> Products
+        {
+            get { return _products; }
         }
 
         private void Start()
@@ -39,6 +36,16 @@ namespace VendingMachine.App.Models
             _wallet.ClearDeposited();
 
             _wallet.ChangeCoinsAmount = _coinsAmountRepository.Get().ToList();
+        }
+
+        public void AddCoinAmount(CoinAmount coinAmount)
+        {
+            _wallet.AddCoinAmount(coinAmount);
+        }
+        
+        public decimal GetBalance()
+        {
+            return _wallet.Balance;
         }
 
         public ICollection<Coin> Coins => _coinsRepository.Get();
