@@ -5,5 +5,6 @@ namespace VendingMachine.App.Contracts
     public interface IProductsGetRepository
     {
         ICollection<Product> Get();
+        void LoadProducts();
     }
 }

@@ -1,23 +1,16 @@
-﻿using VendingMachine.App.Commands;
-using VendingMachine.App.Contracts;
+﻿using VendingMachine.App.Contracts;
 
 namespace VendingMachine.App.Models
 {
     public class Machine : IMachine
     {
         private readonly IProductsGetRepository _productsRepository;
-        private readonly ICoinsGetRepository _coinsRepository;
-        private readonly ICoinsAmountGetRepository _coinsAmountRepository;
         private readonly IWallet _wallet;
 
         public Machine(IProductsGetRepository productsRepository,
-            ICoinsAmountGetRepository coinsAmountRepository,
-            ICoinsGetRepository coinsRepository,
             IWallet wallet)
         {
             _productsRepository = productsRepository;
-            _coinsAmountRepository = coinsAmountRepository;
-            _coinsRepository = coinsRepository;
             _wallet = wallet;
 
             Start();
@@ -32,27 +25,28 @@ namespace VendingMachine.App.Models
         private void Start()
         {
             _products = _productsRepository.Get();
-
-            _wallet.ClearDeposited();
-
-            _wallet.ChangeCoinsAmount = _coinsAmountRepository.Get().ToList();
         }
 
         public void AddCoinAmount(CoinAmount coinAmount)
         {
             _wallet.AddCoinAmount(coinAmount);
         }
+
+
+        public ICollection<Coin> Coins => _wallet.Coins;
         
         public decimal GetBalance()
         {
             return _wallet.Balance;
         }
 
-        public ICollection<Coin> Coins => _coinsRepository.Get();
-
         public ICollection<CoinAmount> SellProduct(Product product)
         {
             var valueToReturn = _wallet.GetExtraDepositedValue(product.Price);
+            if(valueToReturn < 0)
+            {
+                return null;
+            }
 
             var coinAmountsToReturn = _wallet.GetChangeCoinAmmount(valueToReturn);
             if (coinAmountsToReturn == null)

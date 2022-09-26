@@ -5,5 +5,6 @@ namespace VendingMachine.App.Contracts
     public interface ICoinsAmountGetRepository
     {
         ICollection<CoinAmount> Get();
+        void LoadCoinsAmount();
     }
 }
