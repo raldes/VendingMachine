@@ -9,7 +9,7 @@ using VendingMachine.App.Models;
 
 namespace VendingMachine.App.Commands
 {
-    public class EnterCoinCommand : IRequest<CommandResponse>
+    public class EnterCoinCommand : IRequest<EnterCoinCommandResponse>
     {
         public CoinAmount CoinAmount { get; set; }
     }

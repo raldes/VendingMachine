@@ -5,7 +5,7 @@ using VendingMachine.App.Dtos;
 
 namespace VendingMachine.App.CommandHandlers
 {
-    public class EnterCoinCommandHandler : IRequestHandler<EnterCoinCommand, CommandResponse>
+    public class EnterCoinCommandHandler : IRequestHandler<EnterCoinCommand, EnterCoinCommandResponse>
     {
         private readonly IMachine _machine;
 
@@ -14,10 +14,10 @@ namespace VendingMachine.App.CommandHandlers
             _machine = machine;
         }
 
-        Task<CommandResponse> IRequestHandler<EnterCoinCommand, CommandResponse>.Handle(EnterCoinCommand request, CancellationToken cancellationToken)
+        Task<EnterCoinCommandResponse> IRequestHandler<EnterCoinCommand, EnterCoinCommandResponse>.Handle(EnterCoinCommand request, CancellationToken cancellationToken)
         {
             _machine.Wallet.AddCoinAmount(request.CoinAmount);
-            return Task.FromResult(new CommandResponse { Result = true });
+            return Task.FromResult(new EnterCoinCommandResponse(true));
         }
     }
 }

@@ -56,7 +56,7 @@ namespace VendingMachine.UI
         public static IHostBuilder CreateHostBuilder(string[] args) => Host.CreateDefaultBuilder(args)
             .ConfigureServices((hostingContext, services) =>
             {
-                services.AddSingleton<IRequestHandler<EnterCoinCommand, CommandResponse>, EnterCoinCommandHandler>();
+                services.AddSingleton<IRequestHandler<EnterCoinCommand, EnterCoinCommandResponse>, EnterCoinCommandHandler>();
                 services.AddSingleton<IRequestHandler<CancelCommand, DevolutionResponse>, CancelCommandHandler>();
                 services.AddSingleton<IRequestHandler<SelectProductCommand, DevolutionResponse>, SelectProductCommandHandler>();
                 services.AddMediatR(Assembly.GetExecutingAssembly());

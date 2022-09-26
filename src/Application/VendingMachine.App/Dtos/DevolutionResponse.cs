@@ -2,7 +2,7 @@
 
 namespace VendingMachine.App.Dtos
 {
-    public class DevolutionResponse
+    public record DevolutionResponse
     {
         public ICollection<CoinAmount>? Devolution { get; set; }
     }
