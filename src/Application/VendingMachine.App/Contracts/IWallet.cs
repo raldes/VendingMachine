@@ -11,8 +11,6 @@ namespace VendingMachine.App.Contracts
         ICollection<Coin> Coins { get; set; }
         void AddCoinAmount(CoinAmount coinAmount);
         void ClearDeposited();
-        ICollection<CoinAmount> GetChangeCoinAmmount(decimal value);
-        decimal GetExtraDepositedValue(decimal price);
-        void MoveDepositedCoinsToChangeCoins();
+        ICollection<CoinAmount> OnSoldProduct(Product product);
     }
 }

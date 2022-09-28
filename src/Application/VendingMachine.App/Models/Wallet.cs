@@ -1,5 +1,6 @@
 ﻿
 using VendingMachine.App.Contracts;
+using VendingMachine.App.Exceptions;
 
 namespace VendingMachine.App.Models
 {
@@ -50,7 +51,7 @@ namespace VendingMachine.App.Models
             get { return _depositedCoinsAmount.Sum(c => c.Amount * c.Coin.Value); }
         }
 
-        public void MoveDepositedCoinsToChangeCoins()
+        private void MoveDepositedCoinsToChangeCoins()
         {
             foreach (var coin in _depositedCoinsAmount)
             {
@@ -68,9 +69,29 @@ namespace VendingMachine.App.Models
             _depositedCoinsAmount.Clear();
         }
 
-        public decimal GetExtraDepositedValue(decimal price)
+        private decimal GetExtraDepositedValue(decimal price)
         {
             return Balance - price;
+        }
+
+        public ICollection<CoinAmount> OnSoldProduct(Product product)
+        {
+            var valueToReturn = GetExtraDepositedValue(product.Price);
+            if (valueToReturn < 0)
+            {
+                throw new InsuficientBalanceException();
+            }
+
+            var coinAmountsToReturn = GetChangeCoinAmmount(valueToReturn);
+            if (coinAmountsToReturn == null)
+            {
+                //the change have not solution (there are not coins to give the change). Cancel operation:
+                throw new ChangeHaveNoSolutionException();
+            }
+
+            MoveDepositedCoinsToChangeCoins();
+
+            return coinAmountsToReturn;
         }
 
         public ICollection<CoinAmount> GetChangeCoinAmmount(decimal value)
