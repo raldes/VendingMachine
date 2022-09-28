@@ -1,5 +1,9 @@
 # Vending Machine Solution
 
+## Versions:
+- 2022.09.26. First development.
+- 2022.09.28. Custom Exceptions. Machine Unit Test (method OnSaleProduct)
+
 The solution is a .Net 6 console application.
 
 ## Features
@@ -10,7 +14,7 @@ The solution is a .Net 6 console application.
 - Logging with Serilog.
 - Commands and command handlers, using Mediatr.
 - Query Repositories.
-- Three layers: UI, Application, and Infrastructure.
+- Layers: UI, Application, Infrastructure, and a Testing project.
 
 ### UI
 
