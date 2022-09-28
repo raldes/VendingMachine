@@ -3,6 +3,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using VendingMachine.App.Commands;
 using VendingMachine.App.Contracts;
+using VendingMachine.App.Exceptions;
 using VendingMachine.App.Models;
 
 namespace VendingMachine.UI
@@ -87,15 +88,23 @@ namespace VendingMachine.UI
                     }
                 }
             }
+            catch (InsuficientBalanceException ex)
+            {
+                Console.WriteLine("Insuficiente funds to buy.");
+                await Cancel();
+            }
+            
+            catch (ChangeHaveNoSolutionException ex)
+            {
+                Console.WriteLine("We don't have coins to give the change");
+                await Cancel();
+            }            
+            
             catch (Exception ex)
             {
-                _logger.LogError("Machine Error. Cancel operation.");
-
-                _logger.LogError(ex.ToString());
+                _logger.LogError(ex.Message);
 
                 await Cancel();
-
-                throw;
             }
         }
 
@@ -159,14 +168,14 @@ namespace VendingMachine.UI
             };
 
             var response = await _mediator.Send(command);
-            if (response == null)
-            {
-                //the change have not solution.Cancel operation:
-                Console.WriteLine($"Sorry, I have not money to change.");
+            //if (response == null)
+            //{
+            //    //the change have not solution.Cancel operation:
+            //    Console.WriteLine($"Sorry, I have not money to change.");
 
-                await Cancel();
-                return false;
-            }
+            //    await Cancel();
+            //    return false;
+            //}
 
             Console.WriteLine($"Take your product: {product.Code}");
 

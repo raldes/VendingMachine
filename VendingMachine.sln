@@ -15,6 +15,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VendingMachine.Data", "src\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VendingMachine.App", "src\Application\VendingMachine.App\VendingMachine.App.csproj", "{DDC26855-EC54-4149-99C2-FE6C27000D2C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MachineUnitTest", "Test\MachineUnitTest\MachineUnitTest.csproj", "{4BCCAC2C-85A8-4776-919E-295E9BE5E9AA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{DDC26855-EC54-4149-99C2-FE6C27000D2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DDC26855-EC54-4149-99C2-FE6C27000D2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DDC26855-EC54-4149-99C2-FE6C27000D2C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4BCCAC2C-85A8-4776-919E-295E9BE5E9AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4BCCAC2C-85A8-4776-919E-295E9BE5E9AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4BCCAC2C-85A8-4776-919E-295E9BE5E9AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4BCCAC2C-85A8-4776-919E-295E9BE5E9AA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

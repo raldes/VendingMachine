@@ -42,21 +42,8 @@ namespace VendingMachine.App.Models
 
         public ICollection<CoinAmount> SellProduct(Product product)
         {
-            var valueToReturn = _wallet.GetExtraDepositedValue(product.Price);
-            if(valueToReturn < 0)
-            {
-                return null;
-            }
-
-            var coinAmountsToReturn = _wallet.GetChangeCoinAmmount(valueToReturn);
-            if (coinAmountsToReturn == null)
-            {
-                //the change have not solution (there are not coins to give the change). Cancel operation:
-                return null;
-            }
-
-            _wallet.MoveDepositedCoinsToChangeCoins();
-
+            var coinAmountsToReturn = _wallet.OnSoldProduct(product);
+ 
             product.RemovePortions(1);
 
             return coinAmountsToReturn;
